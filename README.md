@@ -16,3 +16,13 @@ Part B: Creating a Reusable OOP Pipeline
 - The `ParcelPipeline` class runs the existing steps in a fixed order: fetch rows, build `Parcel` objects, build a GeoJSON FeatureCollection, then validate it.  
 - Created a temporary check using the terminal command "python -c "import sys; sys.path.insert(0, 'src'); from pipeline import ParcelPipeline; print(ParcelPipeline('Residential').run()['type'])". returns `FeatureCollection` which means it runs smoothly.  
 
+Part C: Automation, Print, and Comparing Two Runs
+- Created `run_lab8.py` for comparing two outputs. The comparison only works if the features come out in the same order. `ORDER BY parcel_id` in the query guarantees that. Without it, PostgreSQL can return rows in any order, so two identical runs could look different even though the data is the same.
+- Results:   
+    PostGIS: 3.6 USE_GEOS=1 USE_PROJ=1 USE_STATS=1  
+    [3] Feature count: 2  
+    [4] Same result: True  
+    [5] First parcel: P-001  
+    [6] Output saved: True C:\Users\Jasper\Documents\1st Sem 26_27\Programming Class\Lab8\gme205-lab8\output\residential_parcels.geojson  
+
+Part D:
