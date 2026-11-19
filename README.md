@@ -25,4 +25,21 @@ Part C: Automation, Print, and Comparing Two Runs
     [5] First parcel: P-001  
     [6] Output saved: True C:\Users\Jasper\Documents\1st Sem 26_27\Programming Class\Lab8\gme205-lab8\output\residential_parcels.geojson  
 
-Part D:
+Part D and E: Exposing the Same Pipeline through Flask and Running Services
+- Created `app.py` with four routes: 
+    -`/health` for confirming if the Flask is responding and not touching the database
+    -`/api/parcels?land_use=...` for returning GeoJSON for the requested land use.
+    -`wms` for WMS 1.1.1 GetCapabilities and GetMap (raster map)
+    -`wfs` for WFS 1.0.0 GetCapabilities. DescribeFeatureType and GetFeature (vector)
+- results:
+
+| Request | Result |
+|---|---|
+| `/health` | `200, {"status": "ok", ...}` |
+| `/api/parcels?land_use=Residential` | `200, 2 features` |
+| `/api/parcels?land_use=Commercial` | `200, 1 feature` |
+| `/api/parcels?land_use=Unknown` | `400,"error": "Unsupported land_use value"` |
+| `/wms?SERVICE=WMS&REQUEST=GetCapabilities` | `XML with layer parcels` |
+| `/wfs?SERVICE=WFS&REQUEST=GetCapabilities` | GetCapabilities, DescribeFeatureType, GetFeature	Returned WFS_Capabilities version 1.0.0, titled "GmE 205 Teaching Parcels WFS", advertising GML2 and GeoJSON result formats |
+
+- Screenshots: `evidence/Evidence_Flask.jpg`
