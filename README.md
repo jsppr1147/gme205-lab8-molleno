@@ -42,4 +42,13 @@ Part D and E: Exposing the Same Pipeline through Flask and Running Services
 | `/wms?SERVICE=WMS&REQUEST=GetCapabilities` | `XML with layer parcels` |
 | `/wfs?SERVICE=WFS&REQUEST=GetCapabilities` | GetCapabilities, DescribeFeatureType, GetFeature	Returned WFS_Capabilities version 1.0.0, titled "GmE 205 Teaching Parcels WFS", advertising GML2 and GeoJSON result formats |
 
-- Screenshots: `evidence/Evidence_Flask.jpg`
+- Screenshots: `evidence/Evidence_Flask_1.jpg`  
+
+Part E: QGIS Connection  
+- Created two QGIS connections, a WMS at `http://127.0.0.1:5000/wms` and a WFS at `http://127.0.0.1:5000/wfs`.
+- QGIS sends GetCapabilities to discover the layers, then GetMap (WMS) or GetFeature (WFS). Flask runs `ParcelPipeline("Residential")` for each request, and the given helpers build the PNG or GML.  
+- results:   
+    - WMS: Layer loaded, green parcels with dark blue outlines near latitude 0, longitude ~118.5. Not queryable.  
+    - WFS: Layer loaded, rows with parcel_id and land_use columns (P-001 and P-002, Residential). Queryable.  
+
+- Screenshots: `evidence/Evidence_Flask_2.jpg`, `evidence/Evidence_Flask_3.jpg`, `evidence/Evidence_Flask_4.jpg`, `evidence/Evidence_WMS.jpg`, `evidence/Evidence_WFS.jpg`
