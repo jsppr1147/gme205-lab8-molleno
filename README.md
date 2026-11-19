@@ -51,4 +51,24 @@ Part E: QGIS Connection
     - WMS: Layer loaded, green parcels with dark blue outlines near latitude 0, longitude ~118.5. Not queryable.  
     - WFS: Layer loaded, rows with parcel_id and land_use columns (P-001 and P-002, Residential). Queryable.  
 
-- Screenshots: `evidence/Evidence_Flask_2.jpg`, `evidence/Evidence_Flask_3.jpg`, `evidence/Evidence_Flask_4.jpg`, `evidence/Evidence_WMS.jpg`, `evidence/Evidence_WFS.jpg`
+- Screenshots: `evidence/Evidence_Flask_2.jpg`, `evidence/Evidence_Flask_3.jpg`, `evidence/Evidence_Flask_4.jpg`, `evidence/Evidence_WMS.jpg`, `evidence/Evidence_WFS.jpg`   
+
+Part F: Reflections
+
+1. What was reused from Laboratory 7-8 rather than rewritten?  
+`database.py`, `spatial.py` and `exchange.py` were copied from Lab 7 unchanged. `map_renderer.py` and `ogc_services.py` are instructor-provided. Only `pipeline.py`, `run_lab8.py` and `app.py` are new.  
+
+2. Why is ParcelPipeline a useful coordinating object? What should it NOT do?  
+It runs fetch, object construction, GeoJSON building and validation in one fixed order, so the script and every Flask route reuse the same logic. It should not hold credentials, define routes, write files, or contain SQL or GeoJSON formatting. Those belong in `.env`/`database.py`, `app.py`, `run_lab8.py` and `exchange.py`.
+
+3. Why must we specify stable query ordering when comparing outputs?  
+`first == second` only works if features arrive in the same order. `ORDER BY parcel_id` guarantees that. Without it, PostgreSQL may return rows in any order, so identical data could still compare as different.  
+ 
+4. What is the difference between a saved .geojson file and the Flask endpoint?   
+The file is a snapshot written once by `run_lab8.py`. The endpoint runs the pipeline on every request, so it returns current database contents and accepts a `land_use` parameter. Both use the same pipeline and structure.  
+
+5. How do the temporary prints and HTTP responses help locate a failed boundary?   
+Each print or status code checks one stage. For example, a failed connection print points to the database, a wrong count points to the query or data, `Same result: False` points to ordering, and a 400 or 503 from Flask points to input validation or database availability. The first wrong output shows where to look.   
+
+6. WMS vs WFS in QGIS: what can you inspect in the vector attribute table that you cannot inspect in the rendered WMS image?  
+The WMS returns a rendered PNG, so QGIS only displays pixels and cannot read any parcel data. The WFS returns vector features, so the attribute table shows `parcel_id` and `land_use` for each parcel, and the features can be selected, identified and queried. The classroom service is not OGC-certified.  
